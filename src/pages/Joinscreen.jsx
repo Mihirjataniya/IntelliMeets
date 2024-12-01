@@ -4,7 +4,7 @@ import { Video, Users } from 'lucide-react';  // Make sure this import matches y
 const Joinscreen = ({ getMeetingId }) => {
     const [meetingId,setMeetingId] = useState('')
     return (
-        <div className='h-full w-full flex items-center justify-center'>
+        <div className='min-h-screen w-full flex items-center justify-center'>
             <div className="bg-[#46306e] text-white rounded-xl shadow-[10px_10px_10px_rgba(0,0,0,0.6)] p-6 w-96">
                 <h1 className='text-4xl font-bold'>IntelliMeets</h1>
                 <div className='flex flex-col items-center justify-center w-full my-5'>

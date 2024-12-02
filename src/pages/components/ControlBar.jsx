@@ -1,9 +1,12 @@
 import { useMeeting } from '@videosdk.live/react-sdk';
-import { Mic, MicOff, MonitorOff, MonitorPlay, PhoneOff, Video, VideoOff } from 'lucide-react';
+import { Disc2, Mic, MicOff, MonitorOff, MonitorPlay, PhoneOff, Square, Video, VideoOff } from 'lucide-react';
 import React, { useState } from 'react';
+import { startRecording, stopRecording } from '../../utils/Api';
+import { useAudioRecording } from '../../hooks/useAudioRecording';
 
 const ControlBar = ({ meetingId }) => {
   const [copied, setCopied] = useState(false);
+
   const {
     leave,
     toggleMic,
@@ -11,9 +14,13 @@ const ControlBar = ({ meetingId }) => {
     localMicOn,
     localWebcamOn,
     toggleScreenShare,
+    // startRecording,
+    // stopRecording,
+    recordingState,
     presenterId
   } = useMeeting();
 
+  const { isRecording, isLoading, error, toggleRecording } = useAudioRecording({ meetingId });
   const handleMicToggle = () => {
     try {
       toggleMic();
@@ -58,7 +65,7 @@ const ControlBar = ({ meetingId }) => {
         className="flex items-center justify-center p-2 bg-[#46306e] rounded-xl text-sm sm:text-base w-full sm:w-auto">
         {copied ? "Copied!!" : `Meeting Id: ${meetingId}`}
       </button>
-      
+
       <div className="flex items-center justify-center gap-4 sm:gap-8 lg:gap-16">
         <button onClick={handleMicToggle} className="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 bg-[#46306e] rounded-full">
           {localMicOn ? <MicOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Mic className="h-4 w-4 sm:h-5 sm:w-5" />}
@@ -66,6 +73,20 @@ const ControlBar = ({ meetingId }) => {
         <button onClick={handleWebcamToggle} className="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 bg-[#46306e] rounded-full">
           {localWebcamOn ? <VideoOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <Video className="h-4 w-4 sm:h-5 sm:w-5" />}
         </button>
+        <button
+          onClick={toggleRecording}
+          disabled={isLoading}
+          className={`flex items-center justify-center h-8 w-8 bg-[#46306e] sm:h-10 sm:w-10 rounded-full transition-colors ${isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
+          title={error || ''}
+        >
+          {isRecording ? (
+            <Square className="h-4 w-4 sm:h-5 sm:w-5 text-red-500" />
+          ) : (
+            <Disc2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+          )}
+        </button>
+
         <button onClick={handleScreenShare} className="flex items-center justify-center h-8 w-8 sm:h-10 sm:w-10 bg-[#46306e] rounded-full">
           {presenterId ? <MonitorOff className="h-4 w-4 sm:h-5 sm:w-5" /> : <MonitorPlay className="h-4 w-4 sm:h-5 sm:w-5" />}
         </button>

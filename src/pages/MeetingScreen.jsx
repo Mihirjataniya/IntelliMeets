@@ -24,8 +24,8 @@ const MeetingScreen = ({ meetingId, OnLeaveMeeting }) => {
   }
 
   return (
-    <div className="min-h-screen w-full flex flex-col px-2 sm:px-4 md:px-6">
-      {/* Main Video Grid */}
+    <div className="min-h-screen w-full flex flex-col px-2 sm:px-4 md:px-12 md:py-6">
+  
       <div className="flex-grow p-2 sm:p-4">
         {hasScreenShare ? (
           <div className="grid grid-cols-12 gap-2 md:gap-4">
@@ -37,7 +37,7 @@ const MeetingScreen = ({ meetingId, OnLeaveMeeting }) => {
                 className="w-full "
               />
             </div>
-            {/* Other participants take remaining space */}
+          
             <div className="col-span-12 lg:col-span-3">
               <div className="grid grid-cols-1 gap-2">
                 {participantIds

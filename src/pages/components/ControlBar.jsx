@@ -1,8 +1,9 @@
 import { useMeeting } from '@videosdk.live/react-sdk';
 import { Disc2, Mic, MicOff, MonitorOff, MonitorPlay, PhoneOff, Square, Video, VideoOff } from 'lucide-react';
 import React, { useState } from 'react';
-import { startRecording, stopRecording } from '../../utils/Api';
+import { getDocumenttext, startRecording, stopRecording } from '../../utils/Api';
 import { useAudioRecording } from '../../hooks/useAudioRecording';
+import pdfWriter from '../../utils/pdfWriter';
 
 const ControlBar = ({ meetingId }) => {
   const [copied, setCopied] = useState(false);
@@ -14,13 +15,10 @@ const ControlBar = ({ meetingId }) => {
     localMicOn,
     localWebcamOn,
     toggleScreenShare,
-    // startRecording,
-    // stopRecording,
-    recordingState,
     presenterId
   } = useMeeting();
 
-  const { isRecording, isLoading, error, toggleRecording } = useAudioRecording({ meetingId });
+  const { isRecording, isLoading, error, toggleRecording, meetingTranscript } = useAudioRecording({ meetingId });
   const handleMicToggle = () => {
     try {
       toggleMic();
@@ -57,6 +55,16 @@ const ControlBar = ({ meetingId }) => {
         console.error('Failed to copy Meeting ID:', error);
       });
   };
+
+  const generateDocument = async () => {
+    try {
+      const response = await getDocumenttext(meetingTranscript)
+      const pdf = pdfWriter(response)
+      pdf.save('meeting-minutes.pdf')
+    } catch (error) {
+      console.error('Error generating PDF:', error);  
+    }
+  }
 
   return (
     <div className="bg-[#2d1a44] self-center text-white rounded-xl py-2 sm:py-4 flex flex-col sm:flex-row items-center justify-between px-3 sm:px-6 my-3 sm:my-6 gap-4 sm:gap-16 shadow-[10px_10px_10px_rgba(0,0,0,0.6)] w-full max-w-7xl mx-auto">
@@ -95,7 +103,7 @@ const ControlBar = ({ meetingId }) => {
         </button>
       </div>
 
-      <button className="flex items-center justify-center p-2 bg-[#46306e] rounded-xl text-sm sm:text-base w-full sm:w-auto">
+      <button onClick={generateDocument} className="flex items-center justify-center p-2 bg-[#46306e] rounded-xl text-sm sm:text-base w-full sm:w-auto">
         Generate Document
       </button>
     </div>

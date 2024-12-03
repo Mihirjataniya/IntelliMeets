@@ -7,6 +7,7 @@ export const useAudioRecording = ({ meetingId }) => {
     const [isRecording, setIsRecording] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
+    const [meetingTranscript,setMeetingTranscript] = useState('')
 
     const toggleRecording = useCallback(async () => {
         try {
@@ -17,7 +18,8 @@ export const useAudioRecording = ({ meetingId }) => {
                 await startRecording(meetingId)
                 setIsRecording(true)
             } else {
-                await stopRecording(meetingId);
+                const response = await stopRecording(meetingId);
+                setMeetingTranscript(response)
                 setIsRecording(false);
             }
         } catch (error) {
@@ -32,6 +34,7 @@ export const useAudioRecording = ({ meetingId }) => {
         isRecording,
         isLoading,
         error,
-        toggleRecording
+        toggleRecording,
+        meetingTranscript
     }
 }

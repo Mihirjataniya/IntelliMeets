@@ -7,7 +7,7 @@ import pdfWriter from '../../utils/pdfWriter';
 
 const ControlBar = ({ meetingId }) => {
   const [copied, setCopied] = useState(false);
-
+  const [loading,setLoading] = useState(false)
   const {
     leave,
     toggleMic,
@@ -58,11 +58,14 @@ const ControlBar = ({ meetingId }) => {
 
   const generateDocument = async () => {
     try {
+      setLoading(true)
       const response = await getDocumenttext(meetingTranscript)
       const pdf = pdfWriter(response)
       pdf.save('meeting-minutes.pdf')
     } catch (error) {
       console.error('Error generating PDF:', error);  
+    } finally {
+      setLoading(false)
     }
   }
 
@@ -103,8 +106,9 @@ const ControlBar = ({ meetingId }) => {
         </button>
       </div>
 
-      <button onClick={generateDocument} className="flex items-center justify-center p-2 bg-[#46306e] rounded-xl text-sm sm:text-base w-full sm:w-auto">
-        Generate Document
+      <button onClick={generateDocument} className={`flex items-center justify-center p-2 bg-[#46306e] rounded-xl text-sm sm:text-base w-full sm:w-auto ${loading ? 'cursor-not-allowed' : 'cursor-pointer'}`}>
+        {loading ? 'Loading...' : ' Generate Document'}
+       
       </button>
     </div>
   );

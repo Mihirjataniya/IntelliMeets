@@ -1,8 +1,10 @@
 import React from 'react'
 import { AnimatedGridPattern } from "./components/AnimatedGridPattern"
 import { ArrowRight, Calendar, FileText, Download } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 
 const LandingPage = () => {
+  const navigate = useNavigate()
   return (
     <div className="relative min-h-screen bg-gradient-to-br from-[#0d0221] via-[#261447] to-[#451952] overflow-hidden px-10">
       <AnimatedGridPattern
@@ -41,7 +43,9 @@ const LandingPage = () => {
             description="Download well-organized meeting docs in PDF format with one click"
           />
         </div>
-        <button className="bg-gradient-to-r from-[#4c0519] to-[#3b0764] hover:from-[#3b0764] hover:to-[#4c0519] text-white text-lg font-semibold py-6 px-8 rounded-lg transition-all duration-300 flex items-center">
+        <button onClick={()=>{
+          navigate('/meeting')
+        }} className="bg-gradient-to-r from-[#4c0519] to-[#3b0764] hover:from-[#3b0764] hover:to-[#4c0519] text-white text-lg font-semibold py-6 px-8 rounded-lg transition-all duration-300 flex items-center">
           GET STARTED <ArrowRight className="ml-2 w-6 h-6" />
         </button>
       </div>
